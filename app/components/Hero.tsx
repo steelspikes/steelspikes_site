@@ -49,7 +49,7 @@ export default function Hero() {
 
         {/* Main heading */}
         <h1 className="text-4xl sm:text-5xl xl:text-6xl font-bold text-white leading-[1.1] tracking-tight mb-5">
-          Hola, soy<br />
+          Hi, I'm<br />
           <span className="text-[#3b82f6]">{profile.name}</span>
         </h1>
 
@@ -76,14 +76,14 @@ export default function Hero() {
             href="#proyectos"
             className="flex items-center gap-2 px-5 py-2.5 rounded-md bg-[#2563eb] hover:bg-[#1d4ed8] text-white text-sm font-mono font-semibold transition-colors duration-150"
           >
-            Ver proyectos
+            View projects
             <ArrowDownRight className="w-4 h-4" />
           </a>
           <a
             href="#musica"
             className="flex items-center gap-2 px-5 py-2.5 rounded-md border border-[#1a2f50] hover:border-[#c47d3b] text-slate-400 hover:text-[#c47d3b] text-sm font-mono font-semibold transition-colors duration-150 bg-[#0b1628]"
           >
-            Explorar música
+            Explore music
             <Music2 className="w-4 h-4" />
           </a>
         </div>

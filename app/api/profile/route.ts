@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { requireAdmin } from '@/app/lib/auth';
 import { getProfile, updateProfile } from '@/app/lib/db';
 
 export async function GET() {
@@ -10,18 +11,21 @@ export async function GET() {
     });
   } catch (error) {
     console.error('Error fetching profile:', error);
-    return NextResponse.json({ error: 'Error al obtener perfil' }, { status: 500 });
+    return NextResponse.json({ error: 'Error fetching profile' }, { status: 500 });
   }
 }
 
 export async function PUT(request: Request) {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
   try {
     const body = await request.json();
     const { name, role, heroSubtitle, avatarUrl, cvUrl, musicIntro, socialLinks } = body;
 
     if (!name || !role || !heroSubtitle) {
       return NextResponse.json(
-        { error: 'Nombre, Rol y Descripción son campos obligatorios.' },
+        { error: 'Name, role and description are required.' },
         { status: 400 }
       );
     }
@@ -37,7 +41,7 @@ export async function PUT(request: Request) {
     });
 
     return NextResponse.json({
-      message: 'Perfil general actualizado con éxito',
+      message: 'Profile updated successfully',
       profile: {
         ...updated,
         socialLinks: JSON.parse(updated.socialLinks || '{}'),
@@ -45,6 +49,6 @@ export async function PUT(request: Request) {
     });
   } catch (error) {
     console.error('Error updating profile:', error);
-    return NextResponse.json({ error: 'Error al guardar en la base de datos' }, { status: 500 });
+    return NextResponse.json({ error: 'Error saving to the database' }, { status: 500 });
   }
 }

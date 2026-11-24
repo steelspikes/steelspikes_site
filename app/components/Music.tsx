@@ -1,8 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ExternalLink, Music2 } from 'lucide-react';
-import { albumsData, personalInfo } from '@/app/data/portfolioData';
+import { sortByNewest } from '@/app/lib/albumDate';
+import { SpotifyIcon, BandcampIcon } from '@/app/components/SocialIcons';
+import { formatReleaseDate } from '@/app/lib/formatDate';
+import { albumsData } from '@/app/data/portfolioData';
+import SectionHeader from '@/app/components/SectionHeader';
 
 interface AlbumItem {
   id: string | number;
@@ -12,7 +15,8 @@ interface AlbumItem {
   imageUrl?: string;
   gradientFrom?: string;
   gradientTo?: string;
-  platformUrl: string;
+  spotifyUrl?: string;
+  bandcampUrl?: string;
 }
 
 const genreColors: Record<string, string> = {
@@ -26,7 +30,7 @@ const genreColors: Record<string, string> = {
 };
 
 export default function Music() {
-  const [albums, setAlbums] = useState<AlbumItem[]>(albumsData);
+  const [albums, setAlbums] = useState<AlbumItem[]>(sortByNewest(albumsData));
 
   useEffect(() => {
     // Fetch live disks from SQLite database API
@@ -42,16 +46,18 @@ export default function Music() {
               releaseDate: string;
               genres: string[];
               imageUrl: string;
-              platformUrl: string;
+              spotifyUrl: string;
+              bandcampUrl: string;
             }) => ({
               id: a.id,
               title: a.title,
               year: a.releaseDate,
               genres: a.genres,
               imageUrl: a.imageUrl,
-              platformUrl: a.platformUrl || 'https://open.spotify.com',
+              spotifyUrl: a.spotifyUrl,
+              bandcampUrl: a.bandcampUrl,
             }));
-            setAlbums(mapped);
+            setAlbums(sortByNewest(mapped));
           }
         }
       } catch (err) {
@@ -64,11 +70,11 @@ export default function Music() {
 
   return (
     <section id="musica" className="py-20 px-8 lg:px-14 scroll-mt-4">
-      <SH label="// frecuencia alternativa" title="Música & Discografía" />
-      <div className="flex items-start gap-2 p-4 rounded-lg bg-[#0b1628] border border-[#1a2f50] mb-8 max-w-xl">
-        <Music2 className="w-4 h-4 text-[#c47d3b] mt-0.5 shrink-0" />
-        <p className="text-slate-500 text-sm leading-relaxed">{personalInfo.musicIntro}</p>
-      </div>
+      <SectionHeader
+        label="// alternate frequency"
+        title="Music & Discography"
+        section="music"
+      />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         {albums.map((album) => (
@@ -106,6 +112,15 @@ export default function Music() {
                   </div>
                 </>
               )}
+              {(album.spotifyUrl || album.bandcampUrl) && (
+                <a
+                  href={album.spotifyUrl || album.bandcampUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Listen to ${album.title}`}
+                  className="absolute inset-0 z-10 cursor-pointer"
+                />
+              )}
             </div>
 
             {/* Info */}
@@ -113,7 +128,7 @@ export default function Music() {
               <div className="space-y-2">
                 <div>
                   <p className="font-semibold text-white text-sm line-clamp-1">{album.title}</p>
-                  <p className="font-mono text-xs text-slate-600">{album.year}</p>
+                  <p className="font-mono text-xs text-slate-600">{formatReleaseDate(album.year)}</p>
                 </div>
                 <div className="flex flex-wrap gap-1.5">
                   {album.genres.map((genre) => {
@@ -131,28 +146,38 @@ export default function Music() {
                 </div>
               </div>
 
-              <a
-                href={album.platformUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-1.5 text-xs text-slate-600 hover:text-white transition-colors font-mono pt-2 border-t border-[#1a2f50]"
-              >
-                <ExternalLink className="w-3 h-3" /> Ver en plataformas
-              </a>
+              {(album.spotifyUrl || album.bandcampUrl) && (
+                <div className="flex items-center gap-3 pt-2 border-t border-[#1a2f50]">
+                  {album.spotifyUrl && (
+                    <a
+                      href={album.spotifyUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`${album.title} on Spotify`}
+                      title="Spotify"
+                      className="text-slate-600 hover:text-[#1db954] transition-colors"
+                    >
+                      <SpotifyIcon className="w-5 h-5" />
+                    </a>
+                  )}
+                  {album.bandcampUrl && (
+                    <a
+                      href={album.bandcampUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`${album.title} on Bandcamp`}
+                      title="Bandcamp"
+                      className="text-slate-600 hover:text-[#1da0c3] transition-colors"
+                    >
+                      <BandcampIcon className="w-5 h-5" />
+                    </a>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         ))}
       </div>
     </section>
-  );
-}
-
-function SH({ label, title }: { label: string; title: string }) {
-  return (
-    <div className="mb-10">
-      <p className="font-mono text-xs text-[#3b82f6] tracking-widest uppercase mb-2">{label}</p>
-      <h2 className="text-2xl sm:text-3xl font-bold text-white mb-1">{title}</h2>
-      <div className="w-8 h-[2px] bg-[#2563eb] mt-4" />
-    </div>
   );
 }

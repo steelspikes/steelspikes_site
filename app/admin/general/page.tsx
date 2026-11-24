@@ -1,12 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
 import {
   User,
-  Disc,
-  ArrowLeft,
-  ExternalLink,
   Check,
   AlertCircle,
   RefreshCw,
@@ -101,7 +97,7 @@ export default function AdminGeneralPage() {
       }
     } catch (err) {
       console.error(err);
-      setMessage({ type: 'error', text: 'No se pudo cargar la configuración de la base de datos.' });
+      setMessage({ type: 'error', text: 'Could not load the settings from the database.' });
     } finally {
       setLoading(false);
     }
@@ -116,7 +112,7 @@ export default function AdminGeneralPage() {
     setMessage(null);
 
     if (!name || !role || !heroSubtitle) {
-      setMessage({ type: 'error', text: 'Nombre, Rol y Descripción son campos obligatorios (*).' });
+      setMessage({ type: 'error', text: 'Name, role and description are required (*).' });
       return;
     }
 
@@ -148,57 +144,35 @@ export default function AdminGeneralPage() {
       const data = await res.json();
 
       if (res.ok) {
-        setMessage({ type: 'success', text: '¡Configuración general guardada exitosamente en SQLite!' });
+        setMessage({ type: 'success', text: 'General settings saved successfully!' });
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
-        setMessage({ type: 'error', text: data.error || 'Error al guardar los cambios.' });
+        setMessage({ type: 'error', text: data.error || 'Error saving changes.' });
       }
     } catch (err) {
       console.error(err);
-      setMessage({ type: 'error', text: 'Error de conexión con el servidor.' });
+      setMessage({ type: 'error', text: 'Could not reach the server.' });
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#060f1e] text-slate-100 p-4 sm:p-8 lg:p-12">
+    <div className="text-slate-100 p-4 sm:p-8 lg:p-10">
       <div className="max-w-5xl mx-auto space-y-10">
 
         {/* Header navigation */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#1a2f50] pb-6">
           <div className="flex items-center gap-3">
-            <Link
-              href="/"
-              className="p-2 rounded-lg bg-[#0b1628] border border-[#1a2f50] hover:border-[#2563eb] text-slate-400 hover:text-white transition-colors"
-              title="Volver al inicio"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </Link>
             <div>
               <div className="flex items-center gap-2">
                 <Sliders className="w-5 h-5 text-[#3b82f6]" />
-                <h1 className="text-2xl font-bold text-white tracking-tight">Configuración General</h1>
+                <h1 className="text-2xl font-bold text-white tracking-tight">General Settings</h1>
               </div>
               <p className="font-mono text-xs text-slate-500 mt-0.5">
-                Edita tus datos personales, foto, redes y CV persistidos en SQLite
+                Edit your personal info, photo, social links and CV
               </p>
             </div>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <Link
-              href="/admin/disks"
-              className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-[#0b1628] border border-[#1a2f50] hover:border-[#c47d3b] text-slate-300 hover:text-[#c47d3b] text-xs font-mono transition-colors"
-            >
-              <Disc className="w-3.5 h-3.5" /> Administrar Discos
-            </Link>
-            <Link
-              href="/"
-              className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-[#0b1628] border border-[#1a2f50] hover:border-[#2563eb] text-slate-300 hover:text-white text-xs font-mono transition-colors"
-            >
-              Ver Sitio <ExternalLink className="w-3.5 h-3.5" />
-            </Link>
           </div>
         </div>
 
@@ -224,27 +198,27 @@ export default function AdminGeneralPage() {
 
         {loading ? (
           <div className="py-20 text-center text-slate-500 font-mono text-sm flex items-center justify-center gap-2">
-            <RefreshCw className="w-4 h-4 animate-spin" /> Cargando datos de perfil desde SQLite...
+            <RefreshCw className="w-4 h-4 animate-spin" /> Loading profile data...
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-8">
 
-            {/* 1. Información de Perfil */}
+            {/* 1. Profile info */}
             <div className="p-6 rounded-xl bg-[#0b1628] border border-[#1a2f50] space-y-6">
               <div className="flex items-center gap-2 border-b border-[#1a2f50] pb-3">
                 <User className="w-5 h-5 text-[#3b82f6]" />
-                <h2 className="text-base font-bold text-white">1. Información Personal & Avatar</h2>
+                <h2 className="text-base font-bold text-white">1. Personal Info & Avatar</h2>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
                   <label className="block text-xs font-mono text-slate-400 mb-1">
-                    Nombre Completo <span className="text-rose-400">*</span>
+                    Full Name <span className="text-rose-400">*</span>
                   </label>
                   <input
                     type="text"
                     required
-                    placeholder="Tu Nombre"
+                    placeholder="Your Name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     className="w-full px-3 py-2 rounded-md bg-[#060f1e] border border-[#1a2f50] focus:border-[#2563eb] text-white text-sm outline-none transition-colors"
@@ -253,7 +227,7 @@ export default function AdminGeneralPage() {
 
                 <div>
                   <label className="block text-xs font-mono text-slate-400 mb-1">
-                    Rol / Título Profesional <span className="text-rose-400">*</span>
+                    Role / Professional Title <span className="text-rose-400">*</span>
                   </label>
                   <input
                     type="text"
@@ -268,12 +242,12 @@ export default function AdminGeneralPage() {
                 {/* Avatar URL + Live Preview */}
                 <div className="md:col-span-2">
                   <label className="block text-xs font-mono text-slate-400 mb-1">
-                    URL de la Foto / Avatar (Opcional)
+                    Photo / Avatar URL (Optional)
                   </label>
                   <div className="flex flex-col sm:flex-row gap-4 items-start">
                     <input
                       type="url"
-                      placeholder="https://ejemplo.com/tu-foto.jpg"
+                      placeholder="https://example.com/your-photo.jpg"
                       value={avatarUrl}
                       onChange={(e) => setAvatarUrl(e.target.value)}
                       className="flex-1 w-full px-3 py-2 rounded-md bg-[#060f1e] border border-[#1a2f50] focus:border-[#2563eb] text-white text-sm outline-none transition-colors"
@@ -296,7 +270,7 @@ export default function AdminGeneralPage() {
                           </span>
                         )}
                       </div>
-                      <span className="text-xs text-slate-400 font-mono pr-2">Vista previa de avatar</span>
+                      <span className="text-xs text-slate-400 font-mono pr-2">Avatar preview</span>
                     </div>
                   </div>
                 </div>
@@ -304,11 +278,11 @@ export default function AdminGeneralPage() {
                 {/* CV Link */}
                 <div className="md:col-span-2">
                   <label className="block text-xs font-mono text-slate-400 mb-1">
-                    Enlace al CV (URL o archivo local)
+                    CV link (URL or local file)
                   </label>
                   <input
                     type="text"
-                    placeholder="/cv.pdf o https://drive.google.com/..."
+                    placeholder="/cv.pdf or https://drive.google.com/..."
                     value={cvUrl}
                     onChange={(e) => setCvUrl(e.target.value)}
                     className="w-full px-3 py-2 rounded-md bg-[#060f1e] border border-[#1a2f50] focus:border-[#2563eb] text-white text-sm outline-none transition-colors"
@@ -321,18 +295,18 @@ export default function AdminGeneralPage() {
             <div className="p-6 rounded-xl bg-[#0b1628] border border-[#1a2f50] space-y-6">
               <div className="flex items-center gap-2 border-b border-[#1a2f50] pb-3">
                 <FileText className="w-5 h-5 text-[#3b82f6]" />
-                <h2 className="text-base font-bold text-white">2. Textos & Descripciones</h2>
+                <h2 className="text-base font-bold text-white">2. Texts & Descriptions</h2>
               </div>
 
               <div className="space-y-4">
                 <div>
                   <label className="block text-xs font-mono text-slate-400 mb-1">
-                    Descripción General / Subtítulo Hero <span className="text-rose-400">*</span>
+                    Overview / Hero Subtitle <span className="text-rose-400">*</span>
                   </label>
                   <textarea
                     rows={3}
                     required
-                    placeholder="Sintetiza tu trabajo en ingeniería y faceta musical..."
+                    placeholder="Summarize your engineering work and your musical side..."
                     value={heroSubtitle}
                     onChange={(e) => setHeroSubtitle(e.target.value)}
                     className="w-full px-3 py-2 rounded-md bg-[#060f1e] border border-[#1a2f50] focus:border-[#2563eb] text-white text-sm outline-none transition-colors"
@@ -341,11 +315,11 @@ export default function AdminGeneralPage() {
 
                 <div>
                   <label className="block text-xs font-mono text-slate-400 mb-1">
-                    Introducción a la Sección de Música
+                    Music Section Intro
                   </label>
                   <textarea
                     rows={2}
-                    placeholder="Breve texto sobre tu proceso creativo / música..."
+                    placeholder="A short text about your creative process / music..."
                     value={musicIntro}
                     onChange={(e) => setMusicIntro(e.target.value)}
                     className="w-full px-3 py-2 rounded-md bg-[#060f1e] border border-[#1a2f50] focus:border-[#2563eb] text-white text-sm outline-none transition-colors"
@@ -358,7 +332,7 @@ export default function AdminGeneralPage() {
             <div className="p-6 rounded-xl bg-[#0b1628] border border-[#1a2f50] space-y-6">
               <div className="flex items-center gap-2 border-b border-[#1a2f50] pb-3">
                 <Share2 className="w-5 h-5 text-[#3b82f6]" />
-                <h2 className="text-base font-bold text-white">3. Redes & Enlaces a Plataformas</h2>
+                <h2 className="text-base font-bold text-white">3. Social & Platform Links</h2>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -369,7 +343,7 @@ export default function AdminGeneralPage() {
                   </label>
                   <input
                     type="url"
-                    placeholder="https://linkedin.com/in/tu-usuario"
+                    placeholder="https://linkedin.com/in/your-username"
                     value={linkedin}
                     onChange={(e) => setLinkedin(e.target.value)}
                     className="w-full px-3 py-2 rounded-md bg-[#060f1e] border border-[#1a2f50] focus:border-[#2563eb] text-white text-sm outline-none transition-colors"
@@ -383,7 +357,7 @@ export default function AdminGeneralPage() {
                   </label>
                   <input
                     type="url"
-                    placeholder="https://github.com/tu-usuario"
+                    placeholder="https://github.com/your-username"
                     value={github}
                     onChange={(e) => setGithub(e.target.value)}
                     className="w-full px-3 py-2 rounded-md bg-[#060f1e] border border-[#1a2f50] focus:border-[#2563eb] text-white text-sm outline-none transition-colors"
@@ -397,7 +371,7 @@ export default function AdminGeneralPage() {
                   </label>
                   <input
                     type="url"
-                    placeholder="https://facebook.com/tu-perfil"
+                    placeholder="https://facebook.com/your-profile"
                     value={facebook}
                     onChange={(e) => setFacebook(e.target.value)}
                     className="w-full px-3 py-2 rounded-md bg-[#060f1e] border border-[#1a2f50] focus:border-[#2563eb] text-white text-sm outline-none transition-colors"
@@ -411,7 +385,7 @@ export default function AdminGeneralPage() {
                   </label>
                   <input
                     type="url"
-                    placeholder="https://instagram.com/tu-usuario"
+                    placeholder="https://instagram.com/your-username"
                     value={instagram}
                     onChange={(e) => setInstagram(e.target.value)}
                     className="w-full px-3 py-2 rounded-md bg-[#060f1e] border border-[#1a2f50] focus:border-[#2563eb] text-white text-sm outline-none transition-colors"
@@ -425,7 +399,7 @@ export default function AdminGeneralPage() {
                   </label>
                   <input
                     type="url"
-                    placeholder="https://youtube.com/@tu-canal"
+                    placeholder="https://youtube.com/@your-channel"
                     value={youtube}
                     onChange={(e) => setYoutube(e.target.value)}
                     className="w-full px-3 py-2 rounded-md bg-[#060f1e] border border-[#1a2f50] focus:border-[#2563eb] text-white text-sm outline-none transition-colors"
@@ -439,7 +413,7 @@ export default function AdminGeneralPage() {
                   </label>
                   <input
                     type="url"
-                    placeholder="https://tu-nombre.bandcamp.com"
+                    placeholder="https://your-name.bandcamp.com"
                     value={bandcamp}
                     onChange={(e) => setBandcamp(e.target.value)}
                     className="w-full px-3 py-2 rounded-md bg-[#060f1e] border border-[#1a2f50] focus:border-[#2563eb] text-white text-sm outline-none transition-colors"
@@ -463,11 +437,11 @@ export default function AdminGeneralPage() {
                 {/* Email */}
                 <div>
                   <label className="block text-xs font-mono text-slate-400 mb-1">
-                    Correo Electrónico (Contacto)
+                    Email (Contact)
                   </label>
                   <input
                     type="email"
-                    placeholder="tu@correo.com"
+                    placeholder="you@email.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full px-3 py-2 rounded-md bg-[#060f1e] border border-[#1a2f50] focus:border-[#2563eb] text-white text-sm outline-none transition-colors"
@@ -485,11 +459,11 @@ export default function AdminGeneralPage() {
               >
                 {submitting ? (
                   <>
-                    <RefreshCw className="w-4 h-4 animate-spin" /> Guardando en SQLite...
+                    <RefreshCw className="w-4 h-4 animate-spin" /> Saving...
                   </>
                 ) : (
                   <>
-                    <Save className="w-4 h-4" /> Guardar Todos los Cambios
+                    <Save className="w-4 h-4" /> Save All Changes
                   </>
                 )}
               </button>

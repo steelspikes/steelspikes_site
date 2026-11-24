@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Download, Menu, X, Terminal } from 'lucide-react';
+import { Download, Mail, Menu, X, Terminal } from 'lucide-react';
 import { personalInfo as defaultInfo, socialLinks as defaultSocials } from '@/app/data/portfolioData';
 import {
   LinkedInIcon,
@@ -15,16 +15,13 @@ import {
 } from '@/app/components/SocialIcons';
 
 const navLinks = [
-  { label: 'Inicio',      href: '/#inicio' },
-  { label: 'Habilidades', href: '/#skills' },
-  { label: 'Proyectos',   href: '/#proyectos' },
-  { label: 'Música',      href: '/#musica' },
-  { label: 'Contacto',    href: '/#contacto' },
-];
-
-const adminLinks = [
-  { label: '⚙️ Admin General', href: '/admin/general' },
-  { label: '💿 Admin Discos',  href: '/admin/disks' },
+  { label: 'Home',      href: '/#inicio' },
+  { label: 'Skills',    href: '/#skills' },
+  { label: 'Experience', href: '/#experience' },
+  { label: 'Education', href: '/#education' },
+  { label: 'Projects',  href: '/#proyectos' },
+  { label: 'Music',     href: '/#musica' },
+  { label: 'Contact',   href: '/#contacto' },
 ];
 
 export default function Sidebar() {
@@ -57,14 +54,17 @@ export default function Sidebar() {
     fetchProfile();
   }, []);
 
+  const email = ((socialsMap as { email?: string }).email || '').trim();
+
   const socials = [
-    { icon: <LinkedInIcon  className="w-4 h-4" />, href: socialsMap.linkedin  || defaultSocials.linkedin,  label: 'LinkedIn'  },
-    { icon: <GitHubIcon    className="w-4 h-4" />, href: socialsMap.github    || defaultSocials.github,    label: 'GitHub'    },
-    { icon: <FacebookIcon  className="w-4 h-4" />, href: socialsMap.facebook  || defaultSocials.facebook,  label: 'Facebook'  },
-    { icon: <InstagramIcon className="w-4 h-4" />, href: socialsMap.instagram || defaultSocials.instagram, label: 'Instagram' },
-    { icon: <YouTubeIcon   className="w-4 h-4" />, href: socialsMap.youtube   || defaultSocials.youtube,   label: 'YouTube'   },
-    { icon: <BandcampIcon  className="w-4 h-4" />, href: socialsMap.bandcamp  || defaultSocials.bandcamp,  label: 'Bandcamp'  },
-    { icon: <SpotifyIcon   className="w-4 h-4" />, href: socialsMap.spotify   || defaultSocials.spotify,   label: 'Spotify'   },
+    ...(email ? [{ icon: <Mail className="w-4 h-4" />, href: `mailto:${email}`, label: 'Email', external: false }] : []),
+    { icon: <LinkedInIcon  className="w-4 h-4" />, href: socialsMap.linkedin  || defaultSocials.linkedin,  label: 'LinkedIn' , external: true },
+    { icon: <GitHubIcon    className="w-4 h-4" />, href: socialsMap.github    || defaultSocials.github,    label: 'GitHub'   , external: true },
+    { icon: <FacebookIcon  className="w-4 h-4" />, href: socialsMap.facebook  || defaultSocials.facebook,  label: 'Facebook' , external: true },
+    { icon: <InstagramIcon className="w-4 h-4" />, href: socialsMap.instagram || defaultSocials.instagram, label: 'Instagram', external: true },
+    { icon: <YouTubeIcon   className="w-4 h-4" />, href: socialsMap.youtube   || defaultSocials.youtube,   label: 'YouTube'  , external: true },
+    { icon: <BandcampIcon  className="w-4 h-4" />, href: socialsMap.bandcamp  || defaultSocials.bandcamp,  label: 'Bandcamp' , external: true },
+    { icon: <SpotifyIcon   className="w-4 h-4" />, href: socialsMap.spotify   || defaultSocials.spotify,   label: 'Spotify'  , external: true },
   ];
 
   const roleParts = profile.role.split(' & ');
@@ -147,8 +147,7 @@ export default function Sidebar() {
             <a
               key={s.label}
               href={s.href}
-              target="_blank"
-              rel="noopener noreferrer"
+              {...(s.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
               aria-label={s.label}
               title={s.label}
               className="text-slate-400 hover:text-white transition-colors duration-150 p-1 hover:bg-[#0b1628] rounded"
@@ -172,23 +171,6 @@ export default function Sidebar() {
             </Link>
           ))}
 
-          {/* Admin Navigation (Temporal) */}
-          <div className="pt-3 mt-2 border-t border-[#1a2f50] flex flex-col gap-1">
-            <span className="font-mono text-[10px] text-slate-500 uppercase tracking-wider px-1">
-              Admin (Temporal)
-            </span>
-            {adminLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setOpen(false)}
-                className="group flex items-center gap-2 py-1.5 text-xs text-slate-400 hover:text-[#3b82f6] transition-colors duration-150 font-mono"
-              >
-                <span className="w-0 group-hover:w-2 h-px bg-[#3b82f6] transition-all duration-200 overflow-hidden" />
-                {link.label}
-              </Link>
-            ))}
-          </div>
         </nav>
 
         {/* Spacer */}
@@ -197,7 +179,7 @@ export default function Sidebar() {
         {/* Status badge */}
         <div className="flex items-center gap-2 py-2 px-3 rounded-md bg-[#0b1628] border border-[#1a2f50]">
           <span className="w-2 h-2 rounded-full bg-[#22c55e] shrink-0" />
-          <span className="font-mono text-xs text-slate-400">Disponible</span>
+          <span className="font-mono text-xs text-slate-400">Available</span>
         </div>
 
         {/* CV button */}
@@ -207,7 +189,7 @@ export default function Sidebar() {
           className="flex items-center justify-center gap-2 py-2.5 rounded-md bg-[#2563eb] hover:bg-[#1d4ed8] text-white text-xs font-mono font-semibold transition-colors duration-150"
         >
           <Download className="w-3.5 h-3.5" />
-          Descargar CV
+          Download CV
         </a>
 
         {/* Terminal watermark */}

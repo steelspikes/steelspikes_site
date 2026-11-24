@@ -5,10 +5,10 @@ import { Download, Menu, X, Code2 } from 'lucide-react';
 import { personalInfo } from '@/app/data/portfolioData';
 
 const navLinks = [
-  { label: 'Habilidades', href: '#skills' },
-  { label: 'Proyectos', href: '#proyectos' },
-  { label: 'Música', href: '#musica' },
-  { label: 'Contacto', href: '#contacto' },
+  { label: 'Skills', href: '#skills' },
+  { label: 'Projects', href: '#proyectos' },
+  { label: 'Music', href: '#musica' },
+  { label: 'Contact', href: '#contacto' },
 ];
 
 export default function Navbar() {
@@ -59,7 +59,7 @@ export default function Navbar() {
             className="flex items-center gap-2 px-4 py-2 rounded-md bg-[#2563eb] text-white text-sm font-mono font-semibold hover:bg-[#1d4ed8] transition-colors duration-150"
           >
             <Download className="w-3.5 h-3.5" />
-            Descargar CV
+            Download CV
           </a>
         </nav>
 
@@ -93,7 +93,7 @@ export default function Navbar() {
               className="flex items-center gap-2 px-4 py-2 rounded-md bg-[#2563eb] text-white text-sm font-mono font-semibold hover:bg-[#1d4ed8] w-fit"
             >
               <Download className="w-3.5 h-3.5" />
-              Descargar CV
+              Download CV
             </a>
           </nav>
         </div>
