@@ -13,6 +13,7 @@ import {
   SpotifyIcon,
 } from '@/app/components/SocialIcons';
 import SectionHeader from '@/app/components/SectionHeader';
+import Reveal from '@/app/components/Reveal';
 
 export default function Contact() {
   const [socialsMap, setSocialsMap] = useState(defaultSocials);
@@ -50,14 +51,13 @@ export default function Contact() {
   ];
 
   return (
-    <section id="contacto" className="py-20 px-8 lg:px-14 scroll-mt-4">
-      <div className="h-px bg-[#1a2f50] mb-16" />
-      <div className="max-w-lg">
+    <section id="contacto" className="py-24 px-8 lg:px-14 scroll-mt-4">
+      <div className="max-w-2xl">
         <SectionHeader
           label="// get_in_touch"
           title={
             <>
-              Let&apos;s talk code, <span className="text-[#c47d3b]">or music.</span>
+              Let&apos;s talk code, <span className="text-alt">or music.</span>
             </>
           }
           section="contact"
@@ -65,19 +65,24 @@ export default function Contact() {
 
         {/* Contact channels */}
         <div className="flex items-center gap-2 flex-wrap">
-          {socials.map((s) => (
-            <a key={s.label} href={s.href} {...(s.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-md border border-[#1a2f50] bg-[#0b1628] hover:border-[#2563eb] text-slate-400 hover:text-white transition-colors duration-150 text-xs font-mono">
-              {s.icon} {s.label}
-            </a>
+          {socials.map((s, i) => (
+            <Reveal key={s.label} index={i}>
+              <a
+                href={s.href}
+                {...(s.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                className="btn btn-ghost btn-contact px-3.5 py-2 text-xs"
+              >
+                {s.icon} {s.label}
+              </a>
+            </Reveal>
           ))}
         </div>
       </div>
 
       {/* Footer */}
-      <div className="mt-20 pt-8 border-t border-[#1a2f50] flex flex-col sm:flex-row items-center justify-between gap-2">
-        <p className="font-mono text-xs text-slate-700">© {new Date().getFullYear()} {name}.</p>
-        <p className="font-mono text-xs text-slate-700">Next.js · Tailwind CSS</p>
+      <div className="mt-24 pt-8 border-t border-line flex flex-col sm:flex-row items-center justify-between gap-2">
+        <p className="font-mono text-xs text-faint">© {new Date().getFullYear()} {name}.</p>
+        <p className="font-mono text-xs text-faint">Next.js · Tailwind CSS</p>
       </div>
     </section>
   );

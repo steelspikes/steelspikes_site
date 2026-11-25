@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Award, Clock, ExternalLink, GraduationCap } from 'lucide-react';
 import { formatMonth } from '@/app/lib/formatDate';
 import SectionHeader from '@/app/components/SectionHeader';
+import Reveal from '@/app/components/Reveal';
 
 interface Study {
   id: number;
@@ -49,7 +50,7 @@ export default function Education() {
   }, []);
 
   return (
-    <section id="education" className="py-20 px-8 lg:px-14 scroll-mt-4 space-y-16">
+    <section id="education" className="py-24 px-8 lg:px-14 scroll-mt-4 space-y-16">
       <div>
         <SectionHeader
           label="// learning"
@@ -58,34 +59,33 @@ export default function Education() {
         />
 
         {loaded && studies.length === 0 && (
-          <p className="font-mono text-xs text-slate-600">No education added yet.</p>
+          <p className="font-mono text-xs text-muted">No education added yet.</p>
         )}
 
         <div className="flex flex-col gap-5">
-          {studies.map((s) => (
-            <div
-              key={s.id}
-              className="p-5 rounded-lg bg-[#0b1628] border border-[#1a2f50] hover:border-[#2563eb] transition-colors duration-200"
-            >
+          {studies.map((s, i) => (
+            <Reveal key={s.id} index={i}>
+            <div className="card p-6">
               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1">
                 <div className="flex items-start gap-3">
-                  <GraduationCap className="w-5 h-5 text-[#3b82f6] mt-0.5 shrink-0" />
+                  <GraduationCap className="w-5 h-5 text-accent mt-1 shrink-0" />
                   <div>
-                    <p className="font-semibold text-white text-sm">{s.degree}</p>
-                    <p className="text-slate-500 text-sm">{s.institution}</p>
+                    <p className="font-display font-semibold text-ink text-lg tracking-tight">{s.degree}</p>
+                    <p className="text-body text-sm">{s.institution}</p>
                   </div>
                 </div>
-                <span className="flex items-center gap-1 text-xs font-mono text-slate-600 shrink-0">
+                <span className="flex items-center gap-1.5 text-xs font-mono text-muted shrink-0">
                   <Clock className="w-3 h-3" />
                   {formatMonth(s.startDate)} – {s.current ? 'In progress' : formatMonth(s.endDate)}
                 </span>
               </div>
               {s.description && (
-                <p className="text-slate-400 text-sm leading-relaxed whitespace-pre-line mt-3 sm:pl-8">
+                <p className="text-body text-[15px] leading-relaxed whitespace-pre-line mt-4 sm:pl-8">
                   {s.description}
                 </p>
               )}
             </div>
+            </Reveal>
           ))}
         </div>
       </div>
@@ -95,25 +95,23 @@ export default function Education() {
         <div>
           <SectionHeader
             level="subsection"
-            accent="copper"
+            accent="alt"
             label="// credentials"
             title="Certifications"
             section="certifications"
           />
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {certs.map((c) => (
-              <div
-                key={c.id}
-                className="flex flex-col gap-2 p-5 rounded-lg bg-[#0b1628] border border-[#1a2f50] hover:border-[#c47d3b] transition-colors duration-200"
-              >
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            {certs.map((c, i) => (
+              <Reveal key={c.id} index={i} className="flex">
+              <div className="card card-alt flex-1 flex flex-col gap-2 p-5">
                 <div className="flex items-start gap-3">
-                  <Award className="w-5 h-5 text-[#c47d3b] mt-0.5 shrink-0" />
+                  <Award className="w-5 h-5 text-alt mt-0.5 shrink-0" />
                   <div>
-                    <p className="font-semibold text-white text-sm">{c.name}</p>
-                    <p className="text-slate-500 text-sm">{c.issuer}</p>
+                    <p className="font-display font-semibold text-ink text-base tracking-tight">{c.name}</p>
+                    <p className="text-body text-sm">{c.issuer}</p>
                   </div>
                 </div>
-                <p className="font-mono text-xs text-slate-600 sm:pl-8">
+                <p className="font-mono text-xs text-muted sm:pl-8">
                   Issued {formatMonth(c.issueDate)}
                   {c.expirationDate && ` · Expires ${formatMonth(c.expirationDate)}`}
                 </p>
@@ -122,12 +120,13 @@ export default function Education() {
                     href={c.credentialUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-1.5 text-xs font-mono text-slate-500 hover:text-white transition-colors sm:pl-8"
+                    className="flex items-center gap-1.5 text-xs font-mono text-muted hover:text-alt transition-colors sm:pl-8 mt-auto pt-1"
                   >
                     <ExternalLink className="w-3 h-3" /> Show credential
                   </a>
                 )}
               </div>
+              </Reveal>
             ))}
           </div>
         </div>

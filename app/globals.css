@@ -1,26 +1,230 @@
 @import 'tailwindcss';
 
+/* ── Palette ────────────────────────────────────────────────────────────
+   Flat, dark and quiet. Every surface is a solid color; depth comes from
+   hairline borders and hard offset shadows ("stacked paper"), never from
+   gradients. */
 :root {
-  --background: #060f1e;
-  --foreground: #f1f5f9;
+  --bg: #04070d;
+  --surface: #080d17;
+  --surface-2: #0b1220;
+  --line: #141d2d;
+  --line-strong: #223049;
+  --ink: #eef2f8;
+  --body: #a4aec0;
+  --muted: #7b869a;
+  --faint: #4a556a;
+  --accent: #86a6cf;        /* steel blue — text, icons */
+  --accent-strong: #3b5b86; /* fills, hover borders */
+  --accent-hover: #44679a;
+  --accent-shadow: #16233a;
+  --alt: #a597d4;           /* muted lavender — music */
+  --alt-shadow: #272138;
   --sidebar-w: 240px;
+
+  /* legacy aliases (admin pages) */
+  --background: var(--bg);
+  --foreground: var(--ink);
 }
 
 @theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-ink: var(--ink);
+  --color-body: var(--body);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-hover: var(--accent-hover);
+  --color-alt: var(--alt);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-bricolage);
+  --font-display: var(--font-bricolage);
+  --font-mono: var(--font-jetbrains);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--bg);
+  color: var(--ink);
+  font-feature-settings: 'ss01', 'cv11';
+}
+
+/* Paper grain: a fixed, barely-there noise layer over everything. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 html { scroll-behavior: smooth; }
 
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: #060f1e; }
-::-webkit-scrollbar-thumb { background: #1e3560; border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: #2563eb; }
+::selection { background: var(--alt); color: var(--bg); }
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent-strong); }
+
+/* ── Components ───────────────────────────────────────────────────────── */
+@layer components {
+  /* Flat sheet. On hover it lifts off the page and leaves a solid shadow. */
+  .card {
+    --card-accent: var(--accent-strong);
+    --card-shadow: var(--accent-shadow);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    transition:
+      transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      box-shadow 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      border-color 220ms ease;
+  }
+  .card:hover {
+    border-color: var(--card-accent);
+    transform: translate(-3px, -3px);
+    box-shadow: 3px 3px 0 0 var(--card-shadow);
+  }
+  .card-alt {
+    --card-accent: var(--alt);
+    --card-shadow: var(--alt-shadow);
+  }
+
+  /* Small mono tag used for skills / project tags. */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 7px;
+    border-radius: 4px;
+    border: 1px solid var(--line);
+    background: var(--bg);
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1.5;
+  }
+
+  /* Tactile buttons: lift on hover, press flat on click. */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 6px;
+    font-family: var(--font-mono);
+    font-weight: 600;
+    transition:
+      transform 160ms ease,
+      box-shadow 160ms ease,
+      background-color 160ms ease,
+      border-color 160ms ease,
+      color 160ms ease;
+  }
+  .btn:hover { transform: translate(-2px, -2px); }
+  .btn:active { transform: translate(0, 0); box-shadow: none; }
+
+  .btn-primary {
+    background: var(--accent-strong);
+    color: #fff;
+    border: 1px solid var(--accent-strong);
+  }
+  .btn-primary:hover { box-shadow: 2px 2px 0 0 var(--accent-shadow); }
+
+  .btn-ghost {
+    background: var(--surface);
+    color: var(--body);
+    border: 1px solid var(--line-strong);
+  }
+  .btn-ghost:hover {
+    color: var(--alt);
+    border-color: var(--alt);
+    box-shadow: 2px 2px 0 0 var(--alt-shadow);
+  }
+}
+
+/* ── Motion ───────────────────────────────────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 600ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    transform 600ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@keyframes caret-blink { 50% { opacity: 0; } }
+.caret {
+  display: inline-block;
+  width: 0.55em;
+  height: 1.1em;
+  margin-left: 2px;
+  vertical-align: -0.2em;
+  background: currentColor;
+  animation: caret-blink 1s steps(1) infinite;
+}
+
+@keyframes eq {
+  0%, 100% { transform: scaleY(0.3); }
+  50% { transform: scaleY(1); }
+}
+.eq { display: inline-flex; align-items: flex-end; gap: 2px; height: 12px; }
+.eq > span {
+  width: 2px;
+  height: 100%;
+  background: currentColor;
+  transform-origin: bottom;
+  animation: eq 900ms ease-in-out infinite;
+}
+.eq > span:nth-child(2) { animation-delay: -300ms; }
+.eq > span:nth-child(3) { animation-delay: -600ms; }
+.eq-paused > span { animation-play-state: paused; }
+.btn:hover .eq-paused > span { animation-play-state: running; }
+
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(2.6); opacity: 0; }
+}
+@layer components { .pulse { position: relative; } }
+.pulse::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: inherit;
+  animation: pulse-ring 1.8s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .card, .card:hover, .btn, .btn:hover { transform: none; }
+  .caret, .eq > span, .pulse::after { animation: none; }
+}
+
+/* Contact channels: neutral hover in the blue accent instead of alt. */
+@layer components {
+  .btn-contact { font-weight: 500; }
+  .btn-contact:hover {
+    color: var(--ink);
+    border-color: var(--accent-strong);
+    box-shadow: 2px 2px 0 0 var(--accent-shadow);
+  }
+}

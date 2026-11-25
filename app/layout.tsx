@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Bricolage_Grotesque, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import CapyWalker from '@/app/components/CapyWalker';
+import ParrotFlyer from '@/app/components/ParrotFlyer';
 
-const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] });
-const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'] });
+const bricolage = Bricolage_Grotesque({ variable: '--font-bricolage', subsets: ['latin'] });
+const jetbrains = JetBrains_Mono({ variable: '--font-jetbrains', subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Tu Nombre — Software Engineer & Sound Explorer',
@@ -15,11 +16,12 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${bricolage.variable} ${jetbrains.variable} h-full antialiased`}
     >
-      <body className="min-h-full bg-[#060f1e] text-slate-100">
+      <body className="min-h-full bg-bg text-ink font-sans">
         {children}
         <CapyWalker />
+        <ParrotFlyer />
       </body>
     </html>
   );
